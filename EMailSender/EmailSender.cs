@@ -14,16 +14,16 @@ namespace EMailSender
             m_SMTPServer = SMTPServerIP;
         }
 
-        public void Send(string From,List<string> To, List<string> CC, string Subject,string Body)
+        public void Send(string From, List<string> To, List<string> CC, string Subject, string Body)
         {
-            MailMessage mail = SendPrepare(From, To, CC,Subject,Body);
+            MailMessage mail = SendPrepare(From, To, CC, Subject, Body);
             StartSend(mail);
         }
 
-        public void Send(string From, List<string> To, List<string> CC, string Subject, string Body,List<string> Bcc)
+        public void Send(string From, List<string> To, List<string> CC, string Subject, string Body, List<string> Bcc)
         {
             MailMessage mail = SendPrepare(From, To, CC, Subject, Body);
-            if(Bcc!=null)
+            if (Bcc != null)
             {
                 foreach (string item in Bcc)
                 {
@@ -32,6 +32,30 @@ namespace EMailSender
             }
             StartSend(mail);
         }
+
+        public void Send(string From, List<string> To, List<string> CC, string Subject, string Body, List<string> Bcc, List<string> attachFiles)
+        {
+            using (MailMessage mail = SendPrepare(From, To, CC, Subject, Body))
+            {
+                foreach (string item in attachFiles)
+                {
+                    if (!File.Exists(item))
+                    {
+                        throw new IOException("Attchements don't exist!");
+                    }
+                    mail.Attachments.Add(new Attachment(item));
+                }
+                if (Bcc != null)
+                {
+                    foreach (string item in Bcc)
+                    {
+                        mail.Bcc.Add(new MailAddress(item));
+                    }
+                }
+                StartSend(mail);
+            }
+        }
+
 
         private void StartSend(MailMessage mail)
         {
@@ -52,11 +76,11 @@ namespace EMailSender
                     //}
                     throw ex;
                 }
-            }         
-            
+            }
+
         }
 
-        private static MailMessage SendPrepare(string From, List<string> To,List<string> CC, string Subject, string Body)
+        private static MailMessage SendPrepare(string From, List<string> To, List<string> CC, string Subject, string Body)
         {
             if (string.IsNullOrEmpty(From) || To == null || To.Count == 0 || string.IsNullOrEmpty(Subject))
             {
