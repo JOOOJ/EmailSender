@@ -17,6 +17,7 @@ namespace EMailSender
         public void Send(string From, List<string> To, List<string> CC, string Subject, string Body)
         {
             MailMessage mail = SendPrepare(From, To, CC, Subject, Body);
+            mail.IsBodyHtml = true;
             StartSend(mail);
         }
 
@@ -30,6 +31,7 @@ namespace EMailSender
                     mail.Bcc.Add(new MailAddress(item));
                 }
             }
+            mail.IsBodyHtml = true;
             StartSend(mail);
         }
 
@@ -52,6 +54,7 @@ namespace EMailSender
                         mail.Bcc.Add(new MailAddress(item));
                     }
                 }
+                mail.IsBodyHtml = true;
                 StartSend(mail);
             }
         }
