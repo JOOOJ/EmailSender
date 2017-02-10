@@ -70,13 +70,6 @@ namespace EMailSender
                 }
                 catch (SmtpFailedRecipientsException ex)
                 {
-                    //foreach (var innerEx in ex.InnerExceptions)
-                    //{
-                    //    if (innerEx.StatusCode == SmtpStatusCode.MailboxBusy || innerEx.StatusCode == SmtpStatusCode.MailboxUnavailable)
-                    //    {
-                    //        client.Send(mail);
-                    //    }
-                    //}
                     throw ex;
                 }
             }
